@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChainPulse | Web3 Monitoring Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Blockchain 3D Animation Canvas -->
+    <canvas id="blockchainCanvas"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="nav-glass fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-2xl font-bold gradient-text">ChainPulse</span>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#" class="chain-link px-3 py-2 rounded-md text-sm font-medium text-white">Dashboard</a>
+                            <a href="#" class="chain-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white">Block Explorer</a>
+                            <a href="#" class="chain-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white">DeFi Analytics</a>
+                            <a href="#" class="chain-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white">NFT Tracker</a>
+                            <a href="#" class="chain-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white">Alerts</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6">
+                        <button class="gradient-bg px-4 py-2 rounded-md text-sm font-medium text-white hover:opacity-90 transition">
+                            Connect Wallet
+                        </button>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden absolute top-16 right-0 w-64 h-screen bg-gray-900 p-4">
+            <div class="flex flex-col space-y-4">
+                <a href="#" class="chain-link px-3 py-2 rounded-md text-base font-medium text-white">Dashboard</a>
+                <a href="#" class="chain-link px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">Block Explorer</a>
+                <a href="#" class="chain-link px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">DeFi Analytics</a>
+                <a href="#" class="chain-link px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">NFT Tracker</a>
+                <a href="#" class="chain-link px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">Alerts</a>
+                <button class="gradient-bg px-4 py-2 rounded-md text-base font-medium text-white hover:opacity-90 transition">
+                    Connect Wallet
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <!-- Hero Section -->
+        <section class="mb-16">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">
+                    <span class="gradient-text">Monitor</span> the Web3 Space in <span class="gradient-text">Real-Time</span>
+                </h1>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    ChainPulse provides comprehensive analytics and monitoring for blockchain networks, DeFi protocols, and NFT markets.
+                </p>
+                <div class="mt-8 flex justify-center space-x-4">
+                    <button class="gradient-bg px-6 py-3 rounded-lg text-lg font-medium text-white hover:opacity-90 transition">
+                        Get Started
+                    </button>
+                    <button class="px-6 py-3 rounded-lg text-lg font-medium text-white border border-gray-700 hover:bg-gray-800 transition">
+                        Watch Demo
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Stats Overview -->
+        <section class="mb-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Ethereum -->
+                <div class="card-glass p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <img src="https://www.criptomonedas.co/wp-content/uploads/2021/01/ethereum-eth-logo.png" alt="Ethereum" class="h-8 w-8 mr-3">
+                        <h3 class="text-lg font-semibold">Ethereum</h3>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-gray-400 text-sm">Current Price</p>
+                            <p class="text-2xl font-bold">$3,245.78</p>
+                            <p class="text-green-400 text-sm">+2.45% (24h)</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-400 text-sm">Gas</p>
+                            <p class="text-xl font-bold">42 Gwei</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bitcoin -->
+                <div class="card-glass p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <img src="https://www.criptomonedas.co/wp-content/uploads/2021/01/bitcoin-btc-logo.png" alt="Bitcoin" class="h-8 w-8 mr-3">
+                        <h3 class="text-lg font-semibold">Bitcoin</h3>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-gray-400 text-sm">Current Price</p>
+                            <p class="text-2xl font-bold">$67,892.34</p>
+                            <p class="text-green-400 text-sm">+1.23% (24h)</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-400 text-sm">Hashrate</p>
+                            <p class="text-xl font-bold">182 EH/s</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- DeFi TVL -->
+                <div class="card-glass p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="h-8 w-8 mr-3 gradient-bg rounded-full flex items-center justify-center">
+                            <i class="fas fa-chart-line text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">DeFi TVL</h3>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-gray-400 text-sm">Total Value Locked</p>
+                            <p class="text-2xl font-bold">$98.7B</p>
+                            <p class="text-green-400 text-sm">+5.67% (7d)</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-400 text-sm">Protocols</p>
+                            <p class="text-xl font-bold">1,842</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- NFT Volume -->
+                <div class="card-glass p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="h-8 w-8 mr-3 gradient-bg rounded-full flex items-center justify-center">
+                            <i class="fas fa-palette text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">NFT Volume</h3>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-gray-400 text-sm">24h Volume</p>
+                            <p class="text-2xl font-bold">$124.5M</p>
+                            <p class="text-red-400 text-sm">-3.21% (7d)</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-400 text-sm">Sales</p>
+                            <p class="text-xl font-bold">42.8K</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Blockchain Networks -->
+        <section class="mb-16">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">Blockchain Networks</h2>
+                <a href="#" class="chain-link text-sm font-medium text-gray-300 hover:text-white">View All Networks</a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Ethereum Card -->
+                <div class="card-glass p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <img src="https://www.criptomonedas.co/wp-content/uploads/2021/01/ethereum-eth-logo.png" alt="Ethereum" class="h-10 w-10 mr-3">
+                        <div>
+                            <h3 class="text-xl font-semibold">Ethereum</h3>
+                            <p class="text-gray-400 text-sm">ETH • Mainnet</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <p class="text-gray-400 text-sm">Block Height</p>
+                            <p class="text-lg font-bold">18,245,782</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Transactions</p>
+                            <p class="text-lg font-bold">1.24M</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Validators</p>
+                            <p class="text-lg font-bold">895,214</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Finality</p>
+                            <p class="text-lg font-bold">12.8s</p>
+                        </div>
+                    </div>
+                    <button class="w-full gradient-bg py-2 rounded-lg text-white font-medium hover:opacity-90 transition">
+                        Explore Network
+                    </button>
+                </div>
+                
+                <!-- Polygon Card -->
+                <div class="card-glass p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <img src="https://www.cryptovantage.com/app/uploads/2021/05/polygon-matic-logo-2.png" alt="Polygon" class="h-10 w-10 mr-3">
+                        <div>
+                            <h3 class="text-xl font-semibold">Polygon</h3>
+                            <p class="text-gray-400 text-sm">MATIC • PoS Chain</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <p class="text-gray-400 text-sm">Block Height</p>
+                            <p class="text-lg font-bold">42,567,891</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Transactions</p>
+                            <p class="text-lg font-bold">3.78M</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Validators</p>
+                            <p class="text-lg font-bold">100</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Finality</p>
+                            <p class="text-lg font-bold">2.1s</p>
+                        </div>
+                    </div>
+                    <button class="w-full gradient-bg py-2 rounded-lg text-white font-medium hover:opacity-90 transition">
+                        Explore Network
+                    </button>
+                </div>
+                
+                <!-- Solana Card -->
+                <div class="card-glass p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <img src="/solana.png" alt="Solana" class="h-10 w-10 mr-3">
+                        <div>
+                            <h3 class="text-xl font-semibold">Solana</h3>
+                            <p class="text-gray-400 text-sm">SOL • Mainnet</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <p class="text-gray-400 text-sm">Slot Height</p>
+                            <p class="text-lg font-bold">245,782,145</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">TPS</p>
+                            <p class="text-lg font-bold">2,458</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Validators</p>
+                            <p class="text-lg font-bold">1,842</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Finality</p>
+                            <p class="text-lg font-bold">0.4s</p>
+                        </div>
+                    </div>
+                    <button class="w-full gradient-bg py-2 rounded-lg text-white font-medium hover:opacity-90 transition">
+                        Explore Network
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- DeFi Spotlight -->
+        <section class="mb-16">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">DeFi Spotlight</h2>
+                <a href="#" class="chain-link text-sm font-medium text-gray-300 hover:text-white">View All Protocols</a>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Top Protocols -->
+                <div class="card-glass p-6 rounded-xl">
+                    <h3 class="text-xl font-semibold mb-4">Top Protocols by TVL</h3>
+                    <div class="space-y-4">
+                        <!-- Protocol 1 -->
+                        <div class="flex items-center justify-between p-3 hover:bg-gray-800 rounded-lg transition">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 bg-gray-700 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-landmark text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Lido</p>
+                                    <p class="text-gray-400 text-sm">Liquid Staking</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold">$32.8B</p>
+                                <p class="text-green-400 text-sm">+1.45%</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Protocol 2 -->
+                        <div class="flex items-center justify-between p-3 hover:bg-gray-800 rounded-lg transition">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 bg-gray-700 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-exchange-alt text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Aave</p>
+                                    <p class="text-gray-400 text-sm">Lending</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold">$12.4B</p>
+                                <p class="text-green-400 text-sm">+3.21%</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Protocol 3 -->
+                        <div class="flex items-center justify-between p-3 hover:bg-gray-800 rounded-lg transition">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 bg-gray-700 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-project-diagram text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Uniswap</p>
+                                    <p class="text-gray-400 text-sm">DEX</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold">$8.7B</p>
+                                <p class="text-red-400 text-sm">-0.87%</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Protocol 4 -->
+                        <div class="flex items-center justify-between p-3 hover:bg-gray-800 rounded-lg transition">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 bg-gray-700 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-coins text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">MakerDAO</p>
+                                    <p class="text-gray-400 text-sm">Stablecoin</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold">$7.9B</p>
+                                <p class="text-green-400 text-sm">+2.12%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Yield Opportunities -->
+                <div class="card-glass p-6 rounded-xl">
+                    <h3 class="text-xl font-semibold mb-4">Top Yield Opportunities</h3>
+                    <div class="space-y-4">
+                        <!-- Opportunity 1 -->
+                        <div class="flex items-center justify-between p-3 hover:bg-gray-800 rounded-lg transition">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 bg-gray-700 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-percentage text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">stETH/ETH</p>
+                                    <p class="text-gray-400 text-sm">Curve Finance</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold">18.7% APY</p>
+                                <p class="text-green-400 text-sm">Low Risk</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Opportunity 2 -->
+                        <div class="flex items-center justify-between p-3 hover:bg-gray-800 rounded-lg transition">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 bg-gray-700 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-hand-holding-usd text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">USDC Lending</p>
+                                    <p class="text-gray-400 text-sm">Aave V3</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold">9.2% APY</p>
+                                <p class="text-green-400 text-sm">Low Risk</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Opportunity 3 -->
+                        <div class="flex items-center justify-between p-3 hover:bg-gray-800 rounded-lg transition">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 bg-gray-700 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-rocket text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">ETH Restaking</p>
+                                    <p class="text-gray-400 text-sm">EigenLayer</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold">24.5% APY</p>
+                                <p class="text-yellow-400 text-sm">Medium Risk</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Opportunity 4 -->
+                        <div class="flex items-center justify-between p-3 hover:bg-gray-800 rounded-lg transition">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 bg-gray-700 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-bolt text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">LRT Leverage</p>
+                                    <p class="text-gray-400 text-sm">Pendle Finance</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold">67.3% APY</p>
+                                <p class="text-red-400 text-sm">High Risk</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- NFT Market -->
+        <section class="mb-16">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">NFT Market Pulse</h2>
+                <a href="#" class="chain-link text-sm font-medium text-gray-300 hover:text-white">View All Collections</a>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Collection 1 -->
+                <div class="card-glass rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-300">
+                    <div class="h-48 bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+                        <i class="fas fa-cubes text-white text-5xl"></i>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold">Bored Ape YC</h3>
+                            <span class="text-xs px-2 py-1 bg-gray-800 rounded-full">Ethereum</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <div>
+                                <p class="text-gray-400">Floor</p>
+                                <p class="font-bold">12.5 ETH</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-gray-400">24h Vol</p>
+                                <p class="font-bold">420 ETH</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Collection 2 -->
+                <div class="card-glass rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-300">
+                    <div class="h-48 bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center">
+                        <i class="fas fa-paint-brush text-white text-5xl"></i>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold">CryptoPunks</h3>
+                            <span class="text-xs px-2 py-1 bg-gray-800 rounded-full">Ethereum</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <div>
+                                <p class="text-gray-400">Floor</p>
+                                <p class="font-bold">45.8 ETH</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-gray-400">24h Vol</p>
+                                <p class="font-bold">780 ETH</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Collection 3 -->
+                <div class="card-glass rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-300">
+                    <div class="h-48 bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
+                        <i class="fas fa-meteor text-white text-5xl"></i>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold">Azuki</h3>
+                            <span class="text-xs px-2 py-1 bg-gray-800 rounded-full">Ethereum</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <div>
+                                <p class="text-gray-400">Floor</p>
+                                <p class="font-bold">8.2 ETH</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-gray-400">24h Vol</p>
+                                <p class="font-bold">320 ETH</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Collection 4 -->
+                <div class="card-glass rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-300">
+                    <div class="h-48 bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center">
+                        <i class="fas fa-moon text-white text-5xl"></i>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold">Moonbirds</h3>
+                            <span class="text-xs px-2 py-1 bg-gray-800 rounded-full">Ethereum</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <div>
+                                <p class="text-gray-400">Floor</p>
+                                <p class="font-bold">3.5 ETH</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-gray-400">24h Vol</p>
+                                <p class="font-bold">150 ETH</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section class="gradient-bg rounded-2xl p-8 md:p-12 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Monitor the Blockchain?</h2>
+            <p class="text-lg text-white/90 max-w-2xl mx-auto mb-8">
+                Join thousands of Web3 enthusiasts and professionals who use ChainPulse to stay ahead in the decentralized world.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button class="px-8 py-3 bg-white text-gray-900 rounded-lg font-bold hover:bg-gray-100 transition">
+                    Start Free Trial
+                </button>
+                <button class="px-8 py-3 border-2 border-white text-white rounded-lg font-bold hover:bg-white/10 transition">
+                    Request Demo
+                </button>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900/50 border-t border-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold gradient-text mb-4">ChainPulse</h3>
+                    <p class="text-gray-400">
+                        The most comprehensive Web3 monitoring and analytics platform for blockchain networks, DeFi protocols, and NFT markets.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Product</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">Features</a></li>
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">Pricing</a></li>
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">API</a></li>
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">Integrations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">Documentation</a></li>
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">Guides</a></li>
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">Blog</a></li>
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">Community</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">About</a></li>
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">Careers</a></li>
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">Privacy</a></li>
+                        <li><a href="#" class="chain-link text-gray-400 hover:text-white">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 ChainPulse. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-discord"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-github"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
